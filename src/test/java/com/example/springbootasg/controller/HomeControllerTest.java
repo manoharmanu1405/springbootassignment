@@ -1,15 +1,12 @@
 package com.example.springbootasg.controller;
 
 import com.example.springbootasg.dto.PhoneDto;
-import com.example.springbootasg.model.Phone;
-import com.example.springbootasg.repository.PhoneRepository;
 import com.example.springbootasg.service.PhoneService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
