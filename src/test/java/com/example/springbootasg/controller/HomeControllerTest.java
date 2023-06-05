@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class HomeControllerTest {
@@ -35,7 +36,7 @@ class HomeControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+
         mockMvc = MockMvcBuilders.standaloneSetup(homeController).build();
     }
 
@@ -59,8 +60,6 @@ class HomeControllerTest {
         // Verify that the showPhones() method was called with the correct id
         verify(phoneService, times(1)).showPhones(id);
     }
-
-
     @Test
     @DisplayName("Verify GET Method for retrieving all phones")
     void shouldRetrieveAllPhones() throws Exception {
