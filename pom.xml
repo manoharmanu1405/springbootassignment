@@ -84,6 +84,15 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+
+                        <includes>
+                            <include>com/example/springbootasg/controller/**</include>
+                            <include>com/example/springbootasg/service/**</include>
+                            <include>com/example/springbootasg/dto/**</include>
+                            <include>com/example/springbootasg/model/**</include>
+                            <include>com/example/springbootasg/repository/**</include>
+                        </includes>
+
                 </configuration>
             </plugin>
 
