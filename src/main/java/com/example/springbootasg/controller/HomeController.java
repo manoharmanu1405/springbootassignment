@@ -38,10 +38,10 @@ public class HomeController {
         return "Phone Deleted";
     }
     @PutMapping("/{id}")
-    public String updateStudent(@PathVariable Long id,@RequestParam(required = false) String name,@RequestParam(required = false) String price
+    public String updateStudent(@PathVariable Long id,@RequestBody PhoneDto phone
     ){
 
-        phoneService.updatePhone(id,name,price);
+        phoneService.updatePhone(id,phone);
         return "Phone Data Updated";
     }
 

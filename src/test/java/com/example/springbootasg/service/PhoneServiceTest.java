@@ -89,47 +89,34 @@ class PhoneServiceTest {
         verify(phoneRepository, times(1)).save(any(Phone.class));
     }
 
-    @Test
-    @DisplayName("Updates Phone - Same Name and Price")
-    void testUpdatePhoneSameNameAndPrice() {
+
+
+
+    @ParameterizedTest
+    @DisplayName("Some Cases")
+    @CsvSource({
+            "'samsung', ''",                 // Name same as existing, empty price
+            "'', '25k'",                     // Empty name, price same as existing
+            "'', ''",
+            "'samsung', '25k'", // Empty name and price
+
+    })
+    void testUpdate2PhonesSameNameAndPrice(String name,String price) {
         // Given
         PhoneRepository phoneRepository = mock(PhoneRepository.class);
         Phone existingPhone = new Phone("samsung", "25k");
         Phone updatedPhone = new Phone(existingPhone.getName(), existingPhone.getPrice());
-        String name = "samsung";
-        String price = "25k";
         given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
         given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
         PhoneService phoneService = new PhoneService(phoneRepository);
-
+        PhoneDto phone=new PhoneDto(name,price,1L);
         // When
-        phoneService.updatePhone(1L, name, price);
+        phoneService.updatePhone(1L, phone);
 
         // Then
         verify(phoneRepository, times(1)).findById(1L);
         verify(phoneRepository, never()).save(any(Phone.class));
     }
-    @Test
-    @DisplayName("Updates Phone - Same Name and Price")
-    void testUpdatePhonesSameNameAndPrice() {
-        // Given
-        PhoneRepository phoneRepository = mock(PhoneRepository.class);
-        Phone existingPhone = new Phone("samsung", "25k");
-        Phone updatedPhone = new Phone(existingPhone.getName(), existingPhone.getPrice());
-        String name = "";
-        String price = "";
-        given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
-        given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
-        PhoneService phoneService = new PhoneService(phoneRepository);
-
-        // When
-        phoneService.updatePhone(1L, name, price);
-
-        // Then
-        verify(phoneRepository, times(1)).findById(1L);
-        verify(phoneRepository, never()).save(any(Phone.class));
-    }
-
 
     @ParameterizedTest
     @DisplayName("Updates Phone")
@@ -146,7 +133,8 @@ class PhoneServiceTest {
             "'samsung', '30k'",              // Only price changed, name same as existing
             "'samsung updated', '30k'",     // Both name and price changed to different values
             "'', '30k'",                     // Empty name, only price changed
-            "'samsung updated', ''",         // Only name changed, empty price
+            "'samsung updated', ''"       // Only name changed, empty price
+
     })
     void testUpdatePhone(String name, String price) {
         // given
@@ -162,9 +150,9 @@ class PhoneServiceTest {
         given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
         given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
         PhoneService phoneService = new PhoneService(phoneRepository);
-
+PhoneDto phone=new PhoneDto(name,price,1L);
         // when
-        phoneService.updatePhone(1L, name, price);
+        phoneService.updatePhone(1L, phone);
 
         // then
         verify(phoneRepository, times(1)).findById(1L);
@@ -174,7 +162,6 @@ class PhoneServiceTest {
             verify(phoneRepository, never()).save(any(Phone.class));
         }
     }
-
 
 
 

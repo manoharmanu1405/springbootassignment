@@ -137,19 +137,31 @@ class HomeControllerTest {
         String name = "Updated Samsung";
         String price = "30k";
 
+        PhoneDto expectedPhone = new PhoneDto(price, name, id);
+
+        // Create an ArgumentCaptor to capture the argument passed to the updatePhone() method
+        ArgumentCaptor<Long> idCaptor = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<PhoneDto> phoneCaptor = ArgumentCaptor.forClass(PhoneDto.class);
+
         // Perform the PUT request
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/phones/{id}", id)
-                        .param("name", name)
-                        .param("price", price)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(expectedPhone)))
                 .andExpect(status().isOk());
 
         // Verify that the updatePhone() method was called with the correct parameters
-        verify(phoneService, times(1)).updatePhone(id, name, price);
+        verify(phoneService, times(1)).updatePhone(idCaptor.capture(), phoneCaptor.capture());
+
+        // Retrieve the captured arguments
+        Long capturedId = idCaptor.getValue();
+        PhoneDto capturedPhone = phoneCaptor.getValue();
+
+        // Assert the captured values
+        assertEquals(id, capturedId);
+        assertEquals(expectedPhone.getName(), capturedPhone.getName());
+        assertEquals(expectedPhone.getPrice(), capturedPhone.getPrice());
+        assertEquals(expectedPhone.getId(), capturedPhone.getId());
     }
-
-
-
 
 
 }

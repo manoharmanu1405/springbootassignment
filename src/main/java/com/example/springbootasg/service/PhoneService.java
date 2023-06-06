@@ -52,7 +52,9 @@ public class PhoneService {
     }
 
     @Transactional
-    public void updatePhone(Long phoneId, String name, String price) {
+    public void updatePhone(Long phoneId, PhoneDto phonedto) {
+        String name= phonedto.getName();
+        String price= phonedto.getPrice();
         Phone phone = phoneRepository.findById(phoneId)
                 .orElseThrow(() -> new IllegalStateException("No such phone found"));
 
@@ -72,5 +74,6 @@ public class PhoneService {
             log.info("Updated successfully.........");
         }
     }
+
 
 }
