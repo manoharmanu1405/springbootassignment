@@ -89,6 +89,28 @@ class PhoneServiceTest {
         verify(phoneRepository, times(1)).save(any(Phone.class));
     }
 
+    @Test
+    @DisplayName("Updates Phone - Same Name and Price")
+    void testUpdatePhoneSameNameAndPrice() {
+        // Given
+        PhoneRepository phoneRepository = mock(PhoneRepository.class);
+        Phone existingPhone = new Phone("samsung", "25k");
+        Phone updatedPhone = new Phone(existingPhone.getName(), existingPhone.getPrice());
+        String name = "samsung";
+        String price = "25k";
+        given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
+        given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
+        PhoneService phoneService = new PhoneService(phoneRepository);
+
+        // When
+        phoneService.updatePhone(1L, name, price);
+
+        // Then
+        verify(phoneRepository, times(1)).findById(1L);
+        verify(phoneRepository, never()).save(any(Phone.class));
+    }
+
+
     @ParameterizedTest
     @DisplayName("Updates Phone")
     @CsvSource({
@@ -106,7 +128,6 @@ class PhoneServiceTest {
         Phone existingPhone = new Phone("samsung", "25k");
         Phone updatedPhone = new Phone(existingPhone.getName(), existingPhone.getPrice());
         if (name != null && name.length() > 0 && !Objects.equals(name, existingPhone.getName())) {
-            System.out.println("yoo...............");
             updatedPhone.setName(name);
         }
         if (price != null && price.length() > 0 && !Objects.equals(price, existingPhone.getPrice())) {
@@ -127,8 +148,6 @@ class PhoneServiceTest {
             verify(phoneRepository, never()).save(any(Phone.class));
         }
     }
-
-
 
 
 }
