@@ -1,7 +1,7 @@
 package com.example.springbootasg.service;
 
 import com.example.springbootasg.dto.PhoneDto;
-import com.example.springbootasg.model.Phone;
+import com.example.springbootasg.entity.Phone;
 import com.example.springbootasg.repository.PhoneRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

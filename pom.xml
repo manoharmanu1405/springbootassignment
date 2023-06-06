@@ -26,7 +26,7 @@
         <sonar.inclusions>
             **/com/example/springbootasg/controller/**,
             **/com/example/springbootasg/dto/**,
-            **/com/example/springbootasg/model/**,
+            **/com/example/springbootasg/entity/**,
             **/com/example/springbootasg/repository/**,
             **/com/example/springbootasg/service/**,
         </sonar.inclusions>
@@ -100,7 +100,7 @@
                         <include>com/example/springbootasg/controller/**</include>
                         <include>com/example/springbootasg/service/**</include>
                         <include>com/example/springbootasg/dto/**</include>
-                        <include>com/example/springbootasg/model/**</include>
+                        <include>com/example/springbootasg/entity/**</include>
                         <include>com/example/springbootasg/repository/**</include>
                     </includes>
                 </configuration>

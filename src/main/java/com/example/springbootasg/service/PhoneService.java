@@ -1,7 +1,7 @@
 package com.example.springbootasg.service;
 
 import com.example.springbootasg.dto.PhoneDto;
-import com.example.springbootasg.model.Phone;
+import com.example.springbootasg.entity.Phone;
 import com.example.springbootasg.repository.PhoneRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
