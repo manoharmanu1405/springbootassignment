@@ -94,7 +94,7 @@ class PhoneServiceTest {
             "'samsung', '25k'", // Empty name and price
 
     })
-    void testUpdate2PhonesSameNameAndPrice(String name, String price) {
+    void testUpdatePhones1(String name, String price) {
         // Given
         PhoneRepository phoneRepository = mock(PhoneRepository.class);
         Phone existingPhone = new Phone("samsung", "25k");
@@ -124,10 +124,10 @@ class PhoneServiceTest {
             "'samsung', '30k'",              // Only price changed, name same as existing
             "'', '30k'",                     // Empty name, only price changed
             "'samsung updated', ''",      // Only name changed, empty price
-            "'', ''",
+            "'', 'null'",
             "null, ''"
     })
-    void testUpdatePhone(String name, String price) {
+    void testUpdatePhones2(String name, String price) {
         // given
         PhoneRepository phoneRepository = mock(PhoneRepository.class);
         Phone existingPhone = new Phone("samsung", "25k");
