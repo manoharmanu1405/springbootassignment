@@ -6,6 +6,8 @@ import com.example.springbootasg.repository.PhoneRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,20 +65,15 @@ class PhoneServiceTest {
         Assertions.assertEquals(1, phonesList.size());
     }
     @Test
-    @DisplayName("Successfully Updates a Phone")
-    void testUpdatePhone() {
+    @DisplayName("Deletes a Phone")
+    void testDeletePhone() {
         // given
         PhoneRepository phoneRepository = mock(PhoneRepository.class);
-        Phone existingPhone = new Phone("samsung", "25k");
-        Phone updatedPhone = new Phone("samsung updated", "30k");
-        given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
-        given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
         PhoneService phoneService = new PhoneService(phoneRepository);
         // when
-        phoneService.updatePhone(1L, "samsung updated", "30k");
-        //then
-        verify(phoneRepository, times(1)).findById(1L);
-        verify(phoneRepository, times(1)).save(any(Phone.class));
+        phoneService.deletePhone(1L);
+        // then
+        verify(phoneRepository, times(1)).deleteById(1L);
     }
     @Test
     @DisplayName("Adds a Phone")
@@ -90,76 +87,36 @@ class PhoneServiceTest {
         // then
         verify(phoneRepository, times(1)).save(any(Phone.class));
     }
-    @Test
-    @DisplayName("Deletes a Phone")
-    void testDeletePhone() {
-        // given
-        PhoneRepository phoneRepository = mock(PhoneRepository.class);
-        PhoneService phoneService = new PhoneService(phoneRepository);
-        // when
-        phoneService.deletePhone(1L);
-        // then
-        verify(phoneRepository, times(1)).deleteById(1L);
-    }
 
+    @ParameterizedTest
+    @DisplayName("Updates Phone")
+    @CsvSource({
+            "samsung updated, 30k", // Both name and price updated
+            "samsung updated, 25k", // Only name updated
+            "samsung, 30k" ,// Only price updated
 
-
-    @Test
-    @DisplayName("Updates Phone Name and Price")
-    void testsUpdatePhone() {
+    })
+    void testUpdatePhone(String name, String price) {
         // given
         PhoneRepository phoneRepository = mock(PhoneRepository.class);
         Phone existingPhone = new Phone("samsung", "25k");
-        Phone updatedPhone = new Phone("samsung updated", "30k");
+        Phone updatedPhone = new Phone(name, price);
         given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
         given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
         PhoneService phoneService = new PhoneService(phoneRepository);
 
         // when
-        phoneService.updatePhone(1L, "samsung updated", "30k");
+        phoneService.updatePhone(1L, name, price);
 
         // then
         verify(phoneRepository, times(1)).findById(1L);
         verify(phoneRepository, times(1)).save(any(Phone.class));
     }
 
-    @Test
-    @DisplayName("Updates Phone Name Only")
-    void testUpdatePhoneWithNameOnly() {
-        // given
-        PhoneRepository phoneRepository = mock(PhoneRepository.class);
-        Phone existingPhone = new Phone("samsung", "25k");
-        Phone updatedPhone = new Phone("samsung updated", "25k"); // Same price as existing
-        given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
-        given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
-        PhoneService phoneService = new PhoneService(phoneRepository);
 
-        // when
-        phoneService.updatePhone(1L, "samsung updated", "30k"); // Price parameter not used
 
-        // then
-        verify(phoneRepository, times(1)).findById(1L);
-        verify(phoneRepository, times(1)).save(any(Phone.class));
-    }
 
-    @Test
-    @DisplayName("Updates Phone Price Only")
-    void testUpdatePhoneWithPriceOnly() {
-        // given
-        PhoneRepository phoneRepository = mock(PhoneRepository.class);
-        Phone existingPhone = new Phone("samsung", "25k");
-        Phone updatedPhone = new Phone("samsung", "30k"); // Same name as existing
-        given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
-        given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
-        PhoneService phoneService = new PhoneService(phoneRepository);
 
-        // when
-        phoneService.updatePhone(1L, "samsung updated", "30k"); // Name parameter not used
-
-        // then
-        verify(phoneRepository, times(1)).findById(1L);
-        verify(phoneRepository, times(1)).save(any(Phone.class));
-    }
 
     @Test
     @DisplayName("Does Not Update Phone Name or Price")
