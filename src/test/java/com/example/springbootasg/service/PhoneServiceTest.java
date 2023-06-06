@@ -29,12 +29,12 @@ class PhoneServiceTest {
         Phone p2 = new Phone("apple", "75k");
         List<Phone> phones = Arrays.asList(p1, p2);
         given(phoneRepository.findAll()).willReturn(phones);
-        PhoneService phoneService=new PhoneService(phoneRepository);
+        PhoneService phoneService = new PhoneService(phoneRepository);
         //when
-        List<PhoneDto> phoneslist=phoneService.showPhones().stream().map(phone -> PhoneDto.builder().name(phone.getName()).price(phone.getPrice()).id(phone.getId()).build()).toList();
+        List<PhoneDto> phoneslist = phoneService.showPhones().stream().map(phone -> PhoneDto.builder().name(phone.getName()).price(phone.getPrice()).id(phone.getId()).build()).toList();
         //then
         verify(phoneRepository, times(1)).findAll();
-        Assertions.assertEquals(2,phoneslist.size());
+        Assertions.assertEquals(2, phoneslist.size());
     }
 
     @Test
@@ -59,6 +59,7 @@ class PhoneServiceTest {
         verify(phoneRepository, times(1)).findById(1L);
         Assertions.assertEquals(1, phonesList.size());
     }
+
     @Test
     @DisplayName("Deletes a Phone")
     void testDeletePhone() {
@@ -70,12 +71,13 @@ class PhoneServiceTest {
         // then
         verify(phoneRepository, times(1)).deleteById(1L);
     }
+
     @Test
     @DisplayName("Adds a Phone")
     void testAddPhone() {
         // given
         PhoneRepository phoneRepository = mock(PhoneRepository.class);
-        PhoneDto newPhoneDto = new PhoneDto("samsung", "25k",1L);
+        PhoneDto newPhoneDto = new PhoneDto("samsung", "25k", 1L);
         PhoneService phoneService = new PhoneService(phoneRepository);
         // when
         phoneService.addPhone(newPhoneDto);
@@ -92,7 +94,7 @@ class PhoneServiceTest {
             "'samsung', '25k'", // Empty name and price
 
     })
-    void testUpdate2PhonesSameNameAndPrice(String name,String price) {
+    void testUpdate2PhonesSameNameAndPrice(String name, String price) {
         // Given
         PhoneRepository phoneRepository = mock(PhoneRepository.class);
         Phone existingPhone = new Phone("samsung", "25k");
@@ -100,7 +102,7 @@ class PhoneServiceTest {
         given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
         given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
         PhoneService phoneService = new PhoneService(phoneRepository);
-        PhoneDto phone=new PhoneDto(name,price,1L);
+        PhoneDto phone = new PhoneDto(name, price, 1L);
         // When
         phoneService.updatePhone(1L, phone);
 
@@ -108,6 +110,7 @@ class PhoneServiceTest {
         verify(phoneRepository, times(1)).findById(1L);
         verify(phoneRepository, never()).save(any(Phone.class));
     }
+
     @ParameterizedTest
     @DisplayName("Update Phone")
     @CsvSource({
@@ -151,13 +154,6 @@ class PhoneServiceTest {
             verify(phoneRepository, never()).save(any(Phone.class));
         }
     }
-
-
-
-
-
-
-
 
 
 }
