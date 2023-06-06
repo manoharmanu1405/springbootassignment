@@ -109,18 +109,44 @@ class PhoneServiceTest {
         verify(phoneRepository, times(1)).findById(1L);
         verify(phoneRepository, never()).save(any(Phone.class));
     }
+    @Test
+    @DisplayName("Updates Phone - Same Name and Price")
+    void testUpdatePhonesSameNameAndPrice() {
+        // Given
+        PhoneRepository phoneRepository = mock(PhoneRepository.class);
+        Phone existingPhone = new Phone("samsung", "25k");
+        Phone updatedPhone = new Phone(existingPhone.getName(), existingPhone.getPrice());
+        String name = "";
+        String price = "";
+        given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
+        given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
+        PhoneService phoneService = new PhoneService(phoneRepository);
+
+        // When
+        phoneService.updatePhone(1L, name, price);
+
+        // Then
+        verify(phoneRepository, times(1)).findById(1L);
+        verify(phoneRepository, never()).save(any(Phone.class));
+    }
 
 
     @ParameterizedTest
     @DisplayName("Updates Phone")
     @CsvSource({
             // Combination: Name, Price
-            "null, null",           // No changes
-            "null, '30k'",          // Only price changed
-            "'samsung updated', null",  // Only name changed
-            "'samsung updated', '30k'", // Both name and price changed
-            "'samsung', null",      // Name same as existing, only price changed
-            "null, '25k'",          // Price same as existing, only name changed
+            "null, null",                   // No changes
+            "null, '30k'",                  // Only price changed
+            "'samsung updated', null",      // Only name changed
+            "'samsung updated', '30k'",     // Both name and price changed
+            "'samsung', null",              // Name same as existing, only price changed
+            "null, '25k'",                  // Price same as existing, only name changed
+            "'samsung', '30k'",              // Both name and price same as existing (no changes)
+            "'samsung updated', '25k'",     // Only name changed, price same as existing
+            "'samsung', '30k'",              // Only price changed, name same as existing
+            "'samsung updated', '30k'",     // Both name and price changed to different values
+            "'', '30k'",                     // Empty name, only price changed
+            "'samsung updated', ''",         // Only name changed, empty price
     })
     void testUpdatePhone(String name, String price) {
         // given
@@ -148,6 +174,8 @@ class PhoneServiceTest {
             verify(phoneRepository, never()).save(any(Phone.class));
         }
     }
+
+
 
 
 }
