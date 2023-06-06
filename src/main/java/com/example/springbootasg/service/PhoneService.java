@@ -58,8 +58,8 @@ public class PhoneService {
         Phone phone = phoneRepository.findById(phoneId)
                 .orElseThrow(() -> new IllegalStateException("No such phone found"));
 
-        boolean isNameChanged = name != null && name.length() > 0 && !Objects.equals(name, phone.getName());
-        boolean isPriceChanged = price != null && price.length() > 0 && !Objects.equals(price, phone.getPrice());
+        boolean isNameChanged =   name.length() > 0 && !Objects.equals(name, phone.getName());
+        boolean isPriceChanged =  price.length() > 0 && !Objects.equals(price, phone.getPrice());
 
         if (isNameChanged) {
             phone.setName(name);
