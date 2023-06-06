@@ -53,16 +53,24 @@ public class PhoneService {
 
     @Transactional
     public void updatePhone(Long phoneId, String name, String price) {
-        Phone phone = phoneRepository.findById(phoneId).orElseThrow(() -> new IllegalStateException("No such phone found"));
-        if (name != null && name.length() > 0 && !Objects.equals(name, phone.getName())) {
+        Phone phone = phoneRepository.findById(phoneId)
+                .orElseThrow(() -> new IllegalStateException("No such phone found"));
+
+        boolean isNameChanged = name != null && name.length() > 0 && !Objects.equals(name, phone.getName());
+        boolean isPriceChanged = price != null && price.length() > 0 && !Objects.equals(price, phone.getPrice());
+
+        if (isNameChanged) {
             phone.setName(name);
         }
-        if (price != null && price.length() > 0 && !Objects.equals(price, phone.getPrice())) {
+        if (isPriceChanged) {
             phone.setPrice(price);
         }
 
-        log.info("updating...........");
-        phoneRepository.save(phone);
-        log.info("updated successfully.........");
+        if (isNameChanged || isPriceChanged) {
+            log.info("Updating...........");
+            phoneRepository.save(phone);
+            log.info("Updated successfully.........");
+        }
     }
+
 }
