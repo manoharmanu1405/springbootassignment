@@ -23,14 +23,14 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.sources>src/main/java</sonar.sources>
         <sonar.language>java</sonar.language>
-        <sonar.exclusions>
+        <sonar.inclusions>
             **/com/example/springbootasg/controller/**,
             **/com/example/springbootasg/dto/**,
             **/com/example/springbootasg/model/**,
             **/com/example/springbootasg/repository/**,
             **/com/example/springbootasg/service/**,
             <!--            **/com-->
-        </sonar.exclusions>
+        </sonar.inclusions>
     </properties>
 
     <dependencies>
