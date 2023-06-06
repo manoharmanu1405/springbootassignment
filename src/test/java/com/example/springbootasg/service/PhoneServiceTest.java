@@ -18,8 +18,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 class PhoneServiceTest {
-
-
     @Test
     @DisplayName("Displays All Phones")
     void testShowAllPhones() {
@@ -85,10 +83,27 @@ class PhoneServiceTest {
         verify(phoneRepository, times(1)).save(any(Phone.class));
     }
 
-
+    @ParameterizedTest
+    @DisplayName("Update Phone - Edge Case")
+    @CsvSource({
+            "'samsung', '25k'"
+    })
+    void testUpdatePhones1(String name, String price) {
+        // Given
+        PhoneRepository phoneRepository = mock(PhoneRepository.class);
+        Phone existingPhone = new Phone("samsung", "25k");
+        given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
+        PhoneService phoneService = new PhoneService(phoneRepository);
+        PhoneDto phone = new PhoneDto(name, price, 1L);
+        // When
+        phoneService.updatePhone(1L, phone);
+        // Then
+        verify(phoneRepository, times(1)).findById(1L);
+        verify(phoneRepository, never()).save(any(Phone.class));
+    }
 
     @ParameterizedTest
-    @DisplayName("Update Phone")
+    @DisplayName("Update Phone Test Cases-2")
     @CsvSource({
             "null, null",                   // No changes
             "null, '30k'",                  // Only price changed
@@ -101,35 +116,35 @@ class PhoneServiceTest {
             "'', '30k'",                     // Empty name, only price changed
             "'samsung updated', ''",      // Only name changed, empty price
             "'', 'null'",
-            "null, ''"
+            "null, ''",
+            "'', ''",
+            "'samsung', ''",                 // Name same as existing, empty price
+            "'', '25k'",                     // Empty name, price same as existing
     })
     void testUpdatePhones2(String name, String price) {
         // given
         PhoneRepository phoneRepository = mock(PhoneRepository.class);
         Phone existingPhone = new Phone("samsung", "25k");
-        Phone updatedPhone = new Phone(existingPhone.getName(), existingPhone.getPrice());
-        if (name != null && !name.isEmpty() && !name.equals(existingPhone.getName())) {
-            updatedPhone.setName(name);
-        }
-        if (price != null && !price.isEmpty() && !price.equals(existingPhone.getPrice())) {
-            updatedPhone.setPrice(price);
-        }
+        Phone updatedPhone = new Phone();
+        updatedPhone.setName(name);
+        updatedPhone.setPrice(price);
         given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
         given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
+        System.out.println(updatedPhone.getName());
+        System.out.println(existingPhone.getName());
+        System.out.println(updatedPhone);
+        System.out.println(existingPhone);
         PhoneService phoneService = new PhoneService(phoneRepository);
         PhoneDto phone = new PhoneDto(name, price, 1L);
-
         // when
         phoneService.updatePhone(1L, phone);
-
+        System.out.println();
         // then
         verify(phoneRepository, times(1)).findById(1L);
-        if (!existingPhone.equals(updatedPhone) && (!name.isEmpty() || !price.isEmpty())) {
+        if (!existingPhone.equals(updatedPhone)) {
             verify(phoneRepository, times(1)).save(any(Phone.class));
         } else {
             verify(phoneRepository, never()).save(any(Phone.class));
         }
     }
-
-
 }
