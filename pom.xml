@@ -85,13 +85,7 @@
                         </exclude>
                     </excludes>
 
-                        <includes>
-                            <include>com/example/springbootasg/controller/**</include>
-                            <include>com/example/springbootasg/service/**</include>
-                            <include>com/example/springbootasg/dto/**</include>
-                            <include>com/example/springbootasg/model/**</include>
-                            <include>com/example/springbootasg/repository/**</include>
-                        </includes>
+
 
                 </configuration>
             </plugin>
@@ -101,6 +95,15 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
+                <configuration>
+                    <includes>
+                        <include>com/example/springbootasg/controller/**</include>
+                        <include>com/example/springbootasg/service/**</include>
+                        <include>com/example/springbootasg/dto/**</include>
+                        <include>com/example/springbootasg/model/**</include>
+                        <include>com/example/springbootasg/repository/**</include>
+                    </includes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>jacoco-initialize</id>
