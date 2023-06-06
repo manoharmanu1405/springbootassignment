@@ -11,20 +11,14 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 class PhoneServiceTest {
 
-    @Test
-    void Test() {
-        assertTrue(true);
-    }
 
     @Test
     @DisplayName("Displays All Phones")
@@ -89,9 +83,6 @@ class PhoneServiceTest {
         verify(phoneRepository, times(1)).save(any(Phone.class));
     }
 
-
-
-
     @ParameterizedTest
     @DisplayName("Some Cases")
     @CsvSource({
@@ -117,51 +108,55 @@ class PhoneServiceTest {
         verify(phoneRepository, times(1)).findById(1L);
         verify(phoneRepository, never()).save(any(Phone.class));
     }
-
     @ParameterizedTest
-    @DisplayName("Updates Phone")
+    @DisplayName("Update Phone")
     @CsvSource({
-            // Combination: Name, Price
             "null, null",                   // No changes
             "null, '30k'",                  // Only price changed
             "'samsung updated', null",      // Only name changed
             "'samsung updated', '30k'",     // Both name and price changed
             "'samsung', null",              // Name same as existing, only price changed
             "null, '25k'",                  // Price same as existing, only name changed
-            "'samsung', '30k'",              // Both name and price same as existing (no changes)
             "'samsung updated', '25k'",     // Only name changed, price same as existing
             "'samsung', '30k'",              // Only price changed, name same as existing
-            "'samsung updated', '30k'",     // Both name and price changed to different values
             "'', '30k'",                     // Empty name, only price changed
-            "'samsung updated', ''"       // Only name changed, empty price
-
+            "'samsung updated', ''",      // Only name changed, empty price
+            "'', ''",
+            "null, ''"
     })
     void testUpdatePhone(String name, String price) {
         // given
         PhoneRepository phoneRepository = mock(PhoneRepository.class);
         Phone existingPhone = new Phone("samsung", "25k");
         Phone updatedPhone = new Phone(existingPhone.getName(), existingPhone.getPrice());
-        if (name != null && name.length() > 0 && !Objects.equals(name, existingPhone.getName())) {
+        if (name != null && !name.isEmpty() && !name.equals(existingPhone.getName())) {
             updatedPhone.setName(name);
         }
-        if (price != null && price.length() > 0 && !Objects.equals(price, existingPhone.getPrice())) {
+        if (price != null && !price.isEmpty() && !price.equals(existingPhone.getPrice())) {
             updatedPhone.setPrice(price);
         }
         given(phoneRepository.findById(1L)).willReturn(Optional.of(existingPhone));
         given(phoneRepository.save(any(Phone.class))).willReturn(updatedPhone);
         PhoneService phoneService = new PhoneService(phoneRepository);
-PhoneDto phone=new PhoneDto(name,price,1L);
+        PhoneDto phone = new PhoneDto(name, price, 1L);
+
         // when
         phoneService.updatePhone(1L, phone);
 
         // then
         verify(phoneRepository, times(1)).findById(1L);
-        if (name != null || price != null) {
+        if (!existingPhone.equals(updatedPhone) && (!name.isEmpty() || !price.isEmpty())) {
             verify(phoneRepository, times(1)).save(any(Phone.class));
         } else {
             verify(phoneRepository, never()).save(any(Phone.class));
         }
     }
+
+
+
+
+
+
 
 
 
